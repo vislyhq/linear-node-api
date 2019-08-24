@@ -1,6 +1,6 @@
 {
   "name": "linear-node-api",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "description": "Node wrapper for Linear.app GraphQL API",
   "repository": "https://github.com/vislyhq/linear-node-api.git",
   "author": "Emil Sjölander <emil@visly.app>",
