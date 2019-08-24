@@ -13,8 +13,11 @@ const linear = new Linear(
 );
 
 await linear.createIssue({
-  title: "API driven issue",
+  title: "Issue title",
+  description: "Optional description",
   label: "bug",
-  assignee: "emil"
+  assignee: "emil",
+  state: "todo",
+  project: "My Project"
 });
 ```

@@ -16,6 +16,10 @@ interface Team {
     id: string;
     name: string;
   }>;
+  projects: Array<{
+    id: string;
+    name: string;
+  }>;
 }
 
 interface NewIssue {
@@ -24,6 +28,7 @@ interface NewIssue {
   label?: string;
   assignee?: string;
   state?: string;
+  project?: string;
 }
 
 export class Linear {
@@ -38,7 +43,7 @@ export class Linear {
   private async getTeam() {
     const response = await this.client.request(
       `
-            query {
+            query getTeam($team: String!) {
                 team(id: $team) {
                     id
                     issueLabels {
@@ -55,13 +60,17 @@ export class Linear {
                         id
                         name
                     }
+                    projects {
+                        id
+                        name
+                    }
                 }
             }
         `,
       { team: this.team }
     );
 
-    return response as Team;
+    return response.team as Team;
   }
 
   public async createIssue(issue: NewIssue) {
@@ -85,14 +94,21 @@ export class Linear {
         })
       : null;
 
+    const project = issue.project
+      ? team.projects.find((p: any) => {
+          return p.name.toLowerCase() == issue.project.toLowerCase();
+        })
+      : null;
+
     await this.client.request(
       `mutation createIssue(
             $teamId: String!, 
             $title: String!, 
             $description: String, 
-            $labelId: [String!], 
+            $labelIds: [String!]!, 
             $assigneeId: String,
             $stateId: String,
+            $projectId: String,
         ) {
             issueCreate(
                 input: {
@@ -109,12 +125,13 @@ export class Linear {
         }
         `,
       {
-        team: team.id,
+        teamId: team.id,
         title: issue.title,
         description: issue.description,
-        labelIds: label ? [label.id] : null,
+        labelIds: label ? [label.id] : [],
         assigneeId: assignee ? assignee.id : null,
-        stateId: state ? state.id : null
+        stateId: state ? state.id : null,
+        projectId: project ? project.id : null
       }
     );
   }
