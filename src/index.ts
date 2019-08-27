@@ -118,6 +118,7 @@ export class Linear {
                     assigneeId: $assigneeId
                     stateId: $stateId
                     labelIds: $labelIds
+                    projectId: $projectId
                 }
             ) {
                 lastSyncId
