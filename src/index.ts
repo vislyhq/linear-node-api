@@ -63,6 +63,7 @@ export class Linear {
                     projects {
                         id
                         name
+                        archivedAt
                     }
                 }
             }
@@ -96,7 +97,10 @@ export class Linear {
 
     const project = issue.project
       ? team.projects.find((p: any) => {
-          return p.name.toLowerCase() == issue.project.toLowerCase();
+          return (
+            p.archivedAt == null &&
+            p.name.toLowerCase() == issue.project.toLowerCase()
+          );
         })
       : null;
 
